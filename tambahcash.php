@@ -4,46 +4,14 @@ header('Content-Type: application/json');
 
 $response = ['success' => false, 'message' => ''];
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
-<<<<<<< HEAD
- $kode_cash =$_POST['kode_cash'] ?? '';
- $ktp = $_POST['ktp'] ?? '';
- $kode_laptop = $_POST['kode_laptop'] ?? '';
- $cash_tgl = $_POST['cash_tgl'] ?? '';
-
- if($kode_cash && $ktp && $kode_laptop && $cash_tgl) {
- $stmt = $conn->prepare("SELECT harga from laptop where kode_laptop = ?");
- $stmt->bind_param("s", $kode_laptop);
-    $stmt->execute();
-    $stmt->bind_result($harga);
-    $stmt->fetch();
-    $stmt->close();
-
-if ($harga)
-{
-    $stmt = $conn->prepare("INSERT INTO cash (kode_cash, ktp, kode_laptop, cash_tgl, harga) 
-    VALUES (?, ?, ?, ?, ?)");
-    $stmt2->bind_param("ssssd", $kode_cash, $ktp, $kode_laptop, $cash_tgl, $harga);
-    $response['success'] = $stmt->execute();
-    $response['message'] = $response['success'] ? "Data Berhasil Disimpan" : "Gagal simpan: " . $stmt->error;
-    $stmt->close();
-}  
-else
-{
-    $response['message'] = "Kode Laptop tidak ditemukan";
-}
- } else {
- $response['message'] = "Semua data wajib diisi";
- }
-} else {
- $response['message'] = "Metode request tidak valid";
-=======
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $kode_cash = $_POST['kode_cash'] ?? '';
     $ktp = $_POST['ktp'] ?? '';
     $kode_laptop = $_POST['kode_laptop'] ?? '';
     $cash_tgl = $_POST['cash_tgl'] ?? '';
 
-    if($kode_cash && $ktp && $kode_laptop && $cash_tgl) {
+    if ($kode_cash && $ktp && $kode_laptop && $cash_tgl) {
+        // Ambil harga berdasarkan kode laptop
         $stmt = $conn->prepare("SELECT harga FROM laptop WHERE kode_laptop = ?");
         $stmt->bind_param("s", $kode_laptop);
         $stmt->execute();
@@ -52,13 +20,13 @@ else
         $stmt->close();
 
         if ($harga !== null) {
-        
-            $stmt = $conn->prepare("INSERT INTO beli_cash (kode_cash, ktp, kode_laptop, cash_tgl, cash_bayar) VALUES (?, ?, ?, ?, ?)");
+            // Perbaikan di sini: menggunakan $stmt yang benar (bukan $stmt2)
+            $stmt = $conn->prepare("INSERT INTO cash (kode_cash, ktp, kode_laptop, cash_tgl, harga) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("ssssd", $kode_cash, $ktp, $kode_laptop, $cash_tgl, $harga);
             
             if ($stmt->execute()) {
                 $response['success'] = true;
-                $response['message'] = "Data berhasil disimpan";
+                $response['message'] = "Data Berhasil Disimpan";
             } else {
                 $response['message'] = "Gagal simpan: " . $stmt->error;
             }
@@ -71,7 +39,7 @@ else
     }
 } else {
     $response['message'] = "Metode request tidak valid";
->>>>>>> d4d6665067da6f3e9dbe1154b6b36b4ab56358fb
 }
+
 echo json_encode($response);
 ?>
