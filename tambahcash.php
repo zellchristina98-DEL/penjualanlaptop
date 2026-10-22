@@ -19,7 +19,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
 
         if ($harga !== null) {
-            // Perbaikan: Gunakan tabel beli_cash dan kolom cash_bayar
+        
             $stmt = $conn->prepare("INSERT INTO beli_cash (kode_cash, ktp, kode_laptop, cash_tgl, cash_bayar) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("ssssd", $kode_cash, $ktp, $kode_laptop, $cash_tgl, $harga);
             
